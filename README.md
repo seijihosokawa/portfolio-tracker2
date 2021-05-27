@@ -1,1 +1,1 @@
-# A Finance Portfolio tracking webapp using Vue.js and Tailwind.css.
+# A Finance Portfolio tracking web app using Vue.js and Tailwind.css.
