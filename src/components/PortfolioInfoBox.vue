@@ -10,11 +10,28 @@
   >
     <div class="grid grid-rows-2 grid-flow-col gap-2 content-center">
       <div class="flex self-top row-span-1 text-xs italic">{{ name }}</div>
-      <div class="flex justify-center row-span-1 text-base">${{ value }}</div>
+      <div
+        v-if="name === 'Overall Return' || name === 'Performance Today'"
+        class="flex justify-center row-span-1 text-base"
+      >
+        <div v-if="value < 0">-</div>
+        <div v-else>+</div>
+        ${{ numberWithCommas(value) }}
+      </div>
+      <div
+        v-else
+        class="flex justify-center row-span-1 text-base"
+        style="position: relative; top: -15px"
+      >
+        ${{ numberWithCommas(value) }}
+      </div>
       <div
         class="flex justify-center self-center row-span-2 text-2xl items-end"
+        v-if="name === 'Overall Return' || name === 'Performance Today'"
       >
-        +40.4%
+        <div v-if="percentage < 0">-</div>
+        <div v-else>+</div>
+        {{ percentage }}%
       </div>
     </div>
   </div>
@@ -22,29 +39,27 @@
 
 <script>
 export default {
-  props: ["name", "value"],
+  props: ["name", "value", "percentage"],
   data() {
     return {
-      overallReturn: Number,
-      dayChange: Number,
-      dayPercentChange: Number,
       positive: Boolean,
     };
   },
   methods: {
     getOverallReturn() {
       try {
-        this.overallReturn = 5000;
-        this.dayChange = 200;
-        this.dayPercentChange = 3;
-        this.positive = this.dayChange >= 0 ? true : false;
+        //console.log(this.value);
+        this.positive = this.value >= 0 ? true : false;
       } catch (error) {
         console.log(error);
         return "error loading";
       }
     },
+    numberWithCommas(x) {
+      return String(x).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    },
   },
-  created() {
+  mounted() {
     this.getOverallReturn();
   },
 };

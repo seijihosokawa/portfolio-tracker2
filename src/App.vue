@@ -5,12 +5,17 @@
     <div class="w-2/3">
       <div class="flex space-x-4 mx-auto px-4">
         <div class="flex-1">
-          <portfolio-info-box name="Performance Today"></portfolio-info-box>
+          <portfolio-info-box
+            name="Performance Today"
+            v-bind:value="todaysPerformance"
+            v-bind:percentage="todaysPerformancePercentage"
+          ></portfolio-info-box>
         </div>
         <div class="flex-1">
           <portfolio-info-box
             name="Overall Return"
-            v-bind:value="totalReturn"
+            v-bind:value="overallReturn"
+            v-bind:percentage="overallReturnPercentage"
           ></portfolio-info-box>
         </div>
         <div class="flex-1">
@@ -69,6 +74,8 @@ export default {
       portfolioValue: Number,
       overallReturn: Number,
       overallReturnPercentage: Number,
+      todaysPerformance: Number,
+      todaysPerformancePercentage: Number,
     };
   },
   components: {
@@ -81,8 +88,11 @@ export default {
       (async () => {
         this.jsonObj = await csvToJson().fromString(data);
         //console.log(json);
-        this.getPortfolioValue();
-        this.getOverallReturn();
+        this.portfolioValue = this.getPortfolioValue();
+        this.overallReturn = this.getOverallReturn();
+        this.overallReturnPercentage = this.getOverallReturnPercentage();
+        this.todaysPerformance = this.getTodaysPerformance();
+        this.todaysPerformancePercentage = this.getTodaysPerformancePercentage();
       })();
     },
     getPortfolioValue() {
@@ -91,10 +101,9 @@ export default {
       for (let i = 0; i < this.jsonObj.length; i++) {
         total +=
           parseFloat(this.jsonObj[i]["Current Price"]) *
-          parseInt(this.jsonObj[i]["Quantity"]);
+          this.jsonObj[i]["Quantity"];
       }
-      this.portfolioValue = total;
-      this.port;
+      return total;
     },
     getOverallReturn() {
       var totalReturn = 0;
@@ -102,10 +111,29 @@ export default {
         let stockReturn =
           parseFloat(this.jsonObj[i]["Current Price"]) -
           parseFloat(this.jsonObj[i]["Purchase Price"]);
-        console.log(stockReturn);
-        totalReturn += stockReturn * parseInt(this.jsonObj[i]["Quantity"]);
+        totalReturn += stockReturn * this.jsonObj[i]["Quantity"];
       }
-      this.overallReturn = totalReturn;
+      return totalReturn;
+    },
+    getOverallReturnPercentage() {
+      var purchasePrice = 0;
+      for (let i = 0; i < this.jsonObj.length; i++) {
+        purchasePrice +=
+          parseFloat(this.jsonObj[i]["Purchase Price"]) *
+          this.jsonObj[i]["Quantity"];
+      }
+      return ((this.overallReturn / purchasePrice) * 100).toFixed(2);
+    },
+    getTodaysPerformance() {
+      var todayPriceChange = 0;
+      for (let i = 0; i < this.jsonObj.length; i++) {
+        todayPriceChange +=
+          parseFloat(this.jsonObj[i]["Change"]) * this.jsonObj[i]["Quantity"];
+      }
+      return todayPriceChange.toFixed(2);
+    },
+    getTodaysPerformancePercentage() {
+      return ((this.todaysPerformance / this.portfolioValue) * 100).toFixed(2);
     },
   },
   created() {
