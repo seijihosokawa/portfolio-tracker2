@@ -10,9 +10,7 @@
   >
     <div class="grid grid-rows-2 grid-flow-col gap-2 content-center">
       <div class="flex self-top row-span-1 text-xs italic">{{ name }}</div>
-      <div class="flex justify-center row-span-1 text-base">
-        ${{ overallReturn.toLocaleString() }}
-      </div>
+      <div class="flex justify-center row-span-1 text-base">${{ value }}</div>
       <div
         class="flex justify-center self-center row-span-2 text-2xl items-end"
       >
@@ -24,7 +22,7 @@
 
 <script>
 export default {
-  props: ["name"],
+  props: ["name", "value"],
   data() {
     return {
       overallReturn: Number,
