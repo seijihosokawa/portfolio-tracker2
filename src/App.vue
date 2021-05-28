@@ -1,4 +1,5 @@
 <template>
+  <nav-bar></nav-bar>
   <!-- First row of info -->
   <div class="flex">
     <!--  Left side row of info boxes -->
@@ -63,6 +64,7 @@
 import PortfolioInfoBox from "./components/PortfolioInfoBox.vue";
 import MarketIndexBox from "./components/MarketIndexBox.vue";
 import CsvChart from "./components/CsvChart.vue";
+import Navbar from "./components/Navbar.vue";
 import data from "./quotes.csv";
 import csvToJson from "csvtojson";
 
@@ -81,6 +83,7 @@ export default {
   components: {
     "portfolio-info-box": PortfolioInfoBox,
     "market-index-box": MarketIndexBox,
+    "nav-bar": Navbar,
     "csv-chart": CsvChart,
   },
   methods: {
