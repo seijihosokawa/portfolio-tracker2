@@ -9,7 +9,7 @@
     }"
   >
     <div
-      v-if="value === 0 || value === 0.0"
+      v-if="parseInt(value) == 0"
       class="grid grid-rows-2 grid-flow-col gap-2 content-center"
     >
       <div class="flex self-top row-span-1 text-xs italic">
