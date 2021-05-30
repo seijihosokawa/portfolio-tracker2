@@ -8,7 +8,19 @@
       'border-red-600': !positive,
     }"
   >
-    <div class="flex flex-col justify-center">
+    <div v-if="!loaded" class="flex flex-col justify-center">
+      <p class="text-base">{{ name }}</p>
+      <p class="text-xs">
+        <center>
+          <svg
+            class="animate-spin h-4 w-4 rounded-full bg-transparent border-2 border-transparent border-opacity-90"
+            style="border-right-color: white; border-top-color: white"
+            viewBox="0 0 24 24"
+          ></svg>
+        </center>
+      </p>
+    </div>
+    <div v-else class="flex flex-col justify-center">
       <p class="text-base">{{ name }}</p>
       <p class="text-xs">{{ price.toLocaleString() }}</p>
       <p class="text-xs">
@@ -24,6 +36,7 @@ export default {
   data() {
     return {
       price: Number,
+      loaded: false,
       dayChange: Number,
       dayPercentChange: Number,
       positive: Boolean,
@@ -32,11 +45,12 @@ export default {
   methods: {
     async getIndexPrice(stockSymbol) {
       try {
-        //var data = await getMarketPrice(stockSymbol);
-        this.price = 100; //data["price"]["regularMarketPrice"]["fmt"];
-        this.dayChange = -200; //data["price"]["regularMarketChange"]["fmt"];
-        this.dayPercentChange = 3; //data["price"]["regularMarketChangePercent"]["fmt"];
+        var data = await getMarketPrice(stockSymbol);
+        this.price = 200; //data["price"]["regularMarketPrice"]["fmt"];
+        this.dayChange = 300; // data["price"]["regularMarketChange"]["fmt"];
+        this.dayPercentChange = 3.0; //data["price"]["regularMarketChangePercent"]["fmt"];
         this.positive = this.dayChange >= 0 ? true : false;
+        this.loaded = true;
       } catch (error) {
         console.log(error);
         return "error loading";
