@@ -56,7 +56,7 @@
   </div>
   <!-- End First row of info -->
   <div class="flex">
-    <csv-chart></csv-chart>
+    <csv-chart v-bind:jsonObj="jsonObj" v-bind:totalValue="portfolioValue"></csv-chart>
   </div>
 </template>
 
@@ -90,12 +90,14 @@ export default {
     generateJsonObj() {
       (async () => {
         this.jsonObj = await csvToJson().fromString(data);
-        //console.log(json);
+        //console.log(this.jsonObj);
         this.portfolioValue = this.getPortfolioValue();
         this.overallReturn = this.getOverallReturn();
         this.overallReturnPercentage = this.getOverallReturnPercentage();
         this.todaysPerformance = this.getTodaysPerformance();
         this.todaysPerformancePercentage = this.getTodaysPerformancePercentage();
+        //console.log("P value", this.portfolioValue);
+        console.log("Json", this.jsonObj);
       })();
     },
     getPortfolioValue() {
