@@ -16,7 +16,7 @@
         {{ name }}
       </div>
       <div class="flex justify-center row-span-4">
-        <div wire:loading class="absolute mr-2 mt-2">
+        <div wire:loading class="relative mr-2 mt-2">
           <center>
             <svg
               class="animate-spin h-4 w-4 rounded-full bg-transparent border-2 border-transparent border-opacity-90"

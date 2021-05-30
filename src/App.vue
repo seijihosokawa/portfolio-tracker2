@@ -56,10 +56,13 @@
   </div>
   <!-- End First row of info -->
   <div class="flex">
-    <csv-chart
-      v-bind:jsonObj="jsonObj"
-      v-bind:totalValue="portfolioValue"
-    ></csv-chart>
+    <div class="h-1/2"></div>
+    <div class="h-1/2">
+      <csv-chart
+        v-bind:jsonObj="jsonObj"
+        v-bind:totalValue="portfolioValue"
+      ></csv-chart>
+    </div>
   </div>
 </template>
 
@@ -98,7 +101,7 @@ export default {
         this.overallReturnPercentage = this.getOverallReturnPercentage();
         this.todaysPerformance = this.getTodaysPerformance();
         this.todaysPerformancePercentage = this.getTodaysPerformancePercentage();
-        console.log("Json", this.jsonObj);
+        //console.log("Json", this.jsonObj);
       })();
     },
     getPortfolioValue() {
@@ -118,7 +121,6 @@ export default {
           parseFloat(this.jsonObj[i]["Purchase Price"]);
         totalReturn += stockReturn * this.jsonObj[i]["Quantity"];
       }
-      console.log(totalReturn);
       return totalReturn.toFixed(2);
     },
     getOverallReturnPercentage() {
