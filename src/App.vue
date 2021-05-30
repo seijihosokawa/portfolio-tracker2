@@ -1,5 +1,5 @@
 <template>
-  <nav-bar></nav-bar>
+  <nav-bar @update-data="updateData"></nav-bar>
   <!-- First row of info -->
   <div class="flex">
     <!--  Left side row of info boxes -->
@@ -68,7 +68,6 @@ import PortfolioInfoBox from "./components/PortfolioInfoBox.vue";
 import MarketIndexBox from "./components/MarketIndexBox.vue";
 import CsvChart from "./components/CsvChart.vue";
 import Navbar from "./components/Navbar.vue";
-import data from "./quotes.csv";
 import csvToJson from "csvtojson";
 
 export default {
@@ -76,6 +75,7 @@ export default {
   data: function () {
     return {
       jsonObj: Object,
+      data: "",
       portfolioValue: Number,
       overallReturn: Number,
       overallReturnPercentage: Number,
@@ -92,19 +92,16 @@ export default {
   methods: {
     generateJsonObj() {
       (async () => {
-        this.jsonObj = await csvToJson().fromString(data);
-        //console.log(this.jsonObj);
+        this.jsonObj = await csvToJson().fromString(this.data);
         this.portfolioValue = this.getPortfolioValue();
         this.overallReturn = this.getOverallReturn();
         this.overallReturnPercentage = this.getOverallReturnPercentage();
         this.todaysPerformance = this.getTodaysPerformance();
         this.todaysPerformancePercentage = this.getTodaysPerformancePercentage();
-        //console.log("P value", this.portfolioValue);
         console.log("Json", this.jsonObj);
       })();
     },
     getPortfolioValue() {
-      //console.log(this.jsonObj);
       var total = 0;
       for (let i = 0; i < this.jsonObj.length; i++) {
         total +=
@@ -121,7 +118,8 @@ export default {
           parseFloat(this.jsonObj[i]["Purchase Price"]);
         totalReturn += stockReturn * this.jsonObj[i]["Quantity"];
       }
-      return totalReturn;
+      console.log(totalReturn);
+      return totalReturn.toFixed(2);
     },
     getOverallReturnPercentage() {
       var purchasePrice = 0;
@@ -142,6 +140,11 @@ export default {
     },
     getTodaysPerformancePercentage() {
       return ((this.todaysPerformance / this.portfolioValue) * 100).toFixed(2);
+    },
+    updateData(e) {
+      console.log("updatedata", e);
+      this.data = String(e);
+      this.generateJsonObj();
     },
   },
   created() {
