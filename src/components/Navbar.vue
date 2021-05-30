@@ -44,7 +44,7 @@
             id="file-input"
             type="file"
             accept=".csv"
-            v-on:input="readFile"
+            v-on:change="previewFiles"
           />
         </div>
       </div>
@@ -56,15 +56,22 @@ export default {
   data() {
     return { data: String };
   },
+  emits: ["updateData"],
+  methods: {
+    passCsvToParent(csvString) {
+      console.log("passCsvToParent", csvString);
+      this.$emit("update-data", csvString);
+    },
+    previewFiles(event) {
+      var self = this;
+      //console.log(event.target.files[0]);
+      var reader = new FileReader();
+      reader.onload = function () {
+        this.data = reader.result;
+        self.passCsvToParent(this.data);
+      };
+      reader.readAsBinaryString(event.target.files[0]);
+    },
+  },
 };
-var fileInput = document.getElementById("file-input"),
-  readFile = function () {
-    var reader = new FileReader();
-    reader.onload = function () {
-      this.data = reader.result;
-      console.log(this.data);
-    };
-    // start reading the file. When it is done, calls the onload event defined above.
-    reader.readAsBinaryString(fileInput.files[0]);
-  };
 </script>
