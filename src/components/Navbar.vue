@@ -40,7 +40,12 @@
               />
             </svg>
           </label>
-          <input id="file-input" type="file" accept=".csv" />
+          <input
+            id="file-input"
+            type="file"
+            accept=".csv"
+            v-on:input="readFile"
+          />
         </div>
       </div>
     </div>
@@ -49,7 +54,17 @@
 <script>
 export default {
   data() {
-    return {};
+    return { data: String };
   },
 };
+var fileInput = document.getElementById("file-input"),
+  readFile = function () {
+    var reader = new FileReader();
+    reader.onload = function () {
+      this.data = reader.result;
+      console.log(this.data);
+    };
+    // start reading the file. When it is done, calls the onload event defined above.
+    reader.readAsBinaryString(fileInput.files[0]);
+  };
 </script>

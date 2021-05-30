@@ -56,7 +56,10 @@
   </div>
   <!-- End First row of info -->
   <div class="flex">
-    <csv-chart v-bind:jsonObj="jsonObj" v-bind:totalValue="portfolioValue"></csv-chart>
+    <csv-chart
+      v-bind:jsonObj="jsonObj"
+      v-bind:totalValue="portfolioValue"
+    ></csv-chart>
   </div>
 </template>
 
