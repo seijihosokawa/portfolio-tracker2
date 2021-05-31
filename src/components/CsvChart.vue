@@ -1,37 +1,43 @@
 
 <template>
-  <table class="rounded-t-lg m-5 w-5/6 mx-auto bg-gray-200 text-gray-800">
-    <tr class="text-left border-b-2 border-gray-300">
-      <th class="px-4 py-3">Symbol</th>
-      <th class="px-4 py-3">Current Price</th>
-      <th class="px-4 py-3">Shares</th>
-      <th class="px-4 py-3">Purchase Price</th>
-      <th class="px-4 py-3">Change</th>
-      <th class="px-4 py-3">% Change Today</th>
-      <th class="px-4 py-3">Daily Gain/Loss</th>
-      <th class="px-4 py-3">Total Gain/Loss</th>
-      <th class="px-4 py-3">Market Value</th>
-      <th class="px-4 py-3">Portfolio %</th>
+  <table class="rounded-t-lg m-5 w-full mx-auto bg-gray-200 text-gray-800">
+    <tr class="text-left border-b-2 border-gray-300 text-center">
+      <th class="px-3 py-3">Symbol</th>
+      <th class="px-3 py-3">Current Price</th>
+      <th class="px-3 py-3">Shares</th>
+      <th class="px-3 py-3">Purchase Price</th>
+      <th class="px-3 py-3">Change</th>
+      <th class="px-3 py-3">% Change</th>
+      <th class="px-3 py-3">Daily Gain/Loss</th>
+      <th class="px-3 py-3">Total Gain/Loss</th>
+      <th class="px-3 py-3">Market Value</th>
+      <th class="px-3 py-3">Portfolio %</th>
     </tr>
     <tr
       v-for="item in formatedCsvData"
       :key="item.id"
-      class="bg-gray-100 border-b border-gray-200"
+      class="border-b border-gray-200 text-center"
+      :class="{
+        'bg-green-400': item.Change > 0,
+        'bg-red-600': item.Change < 0,
+      }"
     >
-      <td class="px-4 py-3">{{ item["Symbol"] }}</td>
-      <td class="px-4 py-3">${{ numberWithCommas(item["Current Price"]) }}</td>
-      <td class="px-4 py-3">{{ parseInt(item["Shares"]) }}</td>
-      <td class="px-4 py-3">${{ numberWithCommas(item["Purchase Price"]) }}</td>
-      <td class="px-4 py-3">{{ item["Change"] }}</td>
-      <td class="px-4 py-3">{{ item["Percent Change Today"] }}%</td>
-      <td class="px-4 py-3">
+      <td class="px-3 py-3">{{ item["Symbol"] }}</td>
+      <td class="px-3 py-3">${{ numberWithCommas(item["Current Price"]) }}</td>
+      <td class="px-3 py-3">{{ parseInt(item["Shares"]) }}</td>
+      <td class="px-3 py-3">${{ numberWithCommas(item["Purchase Price"]) }}</td>
+      <td class="px-3 py-3">
+        {{ item["Change"] }}
+      </td>
+      <td class="px-3 py-3">{{ item["Percent Change Today"] }}%</td>
+      <td class="px-3 py-3">
         {{ item["Daily Gain/Loss"] }}
       </td>
-      <td class="px-4 py-3">
+      <td class="px-3 py-3">
         {{ numberWithCommas(item["Total Gain/Loss"]) }}
       </td>
-      <td class="px-4 py-3">${{ numberWithCommas(item["Market Value"]) }}</td>
-      <td class="px-4 py-3">{{ item["Portfolio Percent"] }}%</td>
+      <td class="px-3 py-3">${{ numberWithCommas(item["Market Value"]) }}</td>
+      <td class="px-3 py-3">{{ item["Portfolio Percent"] }}%</td>
     </tr>
   </table>
 </template>

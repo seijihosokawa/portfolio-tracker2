@@ -1,7 +1,7 @@
 <template>
   <nav-bar @update-data="updateData"></nav-bar>
   <!-- First row of info -->
-  <div class="flex">
+  <div class="flex auto">
     <!--  Left side row of info boxes -->
     <div class="w-2/3">
       <div class="flex space-x-4 mx-auto px-4">
@@ -55,9 +55,12 @@
     <!-- End Right side row of info boxes -->
   </div>
   <!-- End First row of info -->
-  <div class="flex">
-    <div class="h-1/2"></div>
-    <div class="h-1/2">
+  <div class="flex auto">
+    <div class="w-1/3">
+      <div class="h-1/2">Chart</div>
+      <div class="h-1/2">Chart</div>
+    </div>
+    <div class="w-2/3 m-px mr-4">
       <csv-chart
         v-bind:jsonObj="jsonObj"
         v-bind:totalValue="portfolioValue"
@@ -111,7 +114,7 @@ export default {
           parseFloat(this.jsonObj[i]["Current Price"]) *
           this.jsonObj[i]["Quantity"];
       }
-      return total;
+      return total.toFixed(2);
     },
     getOverallReturn() {
       var totalReturn = 0;
@@ -144,7 +147,7 @@ export default {
       return ((this.todaysPerformance / this.portfolioValue) * 100).toFixed(2);
     },
     updateData(e) {
-      console.log("updatedata", e);
+      //console.log("updatedata", e);
       this.data = String(e);
       this.generateJsonObj();
     },
