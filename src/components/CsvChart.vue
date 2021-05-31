@@ -1,7 +1,7 @@
 
 <template>
-  <table class="rounded-t-lg m-5 w-full mx-auto bg-gray-200 text-gray-800">
-    <tr class="text-left border-b-2 border-gray-300 text-center">
+  <table class="rounded-t-lg m-5 w-full mx-auto">
+    <tr class="text-left border-b-2 border-gray-300 text-center bg-opacity-0">
       <th class="px-3 py-3">Symbol</th>
       <th class="px-3 py-3">Current Price</th>
       <th class="px-3 py-3">Shares</th>
