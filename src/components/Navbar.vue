@@ -56,11 +56,11 @@ export default {
   data() {
     return { data: String };
   },
-  emits: ["updateData"],
+  emits: ["updateCsvData"],
   methods: {
     passCsvToParent(csvString) {
       console.log("passCsvToParent", csvString);
-      this.$emit("update-data", csvString);
+      this.$emit("update-csv-data", csvString);
     },
     previewFiles(event) {
       var self = this;

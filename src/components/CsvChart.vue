@@ -24,7 +24,7 @@
     >
       <td class="px-3 py-3">{{ item["Symbol"] }}</td>
       <td class="px-3 py-3">${{ numberWithCommas(item["Current Price"]) }}</td>
-      <td class="px-3 py-3">{{ parseInt(item["Shares"]) }}</td>
+      <td class="px-3 py-3">{{ item["Shares"] }}</td>
       <td class="px-3 py-3">${{ numberWithCommas(item["Purchase Price"]) }}</td>
       <td class="px-3 py-3">
         {{ item["Change"] }}
@@ -44,6 +44,7 @@
 <script>
 export default {
   props: ["jsonObj", "totalValue"],
+  emits: ["getFormattedData"],
   data: function () {
     return {
       formatedCsvData: [],
@@ -64,6 +65,10 @@ export default {
         return 0;
       });
     },
+    returnFormattedData() {
+      //console.log(this.formatedCsvData);
+      this.$emit("get-formatted-data", this.formatedCsvData);
+    },
   },
   beforeUpdate() {
     this.formatedCsvData = [];
@@ -72,7 +77,7 @@ export default {
       let stock = {
         Symbol: target_copy["Symbol"],
         "Current Price": target_copy["Current Price"],
-        Shares: target_copy["Quantity"],
+        Shares: parseInt(target_copy["Quantity"]),
         "Purchase Price": target_copy["Purchase Price"],
         Change: parseFloat(target_copy["Change"]).toFixed(2),
         "Percent Change Today": (
@@ -102,7 +107,7 @@ export default {
       this.formatedCsvData.push(stock);
     }
     this.sortAlphaSymbol();
-    //console.log(this.formatedCsvData);
+    this.returnFormattedData();
   },
 };
 </script>
