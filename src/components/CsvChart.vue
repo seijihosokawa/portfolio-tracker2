@@ -72,33 +72,38 @@ export default {
   },
   beforeUpdate() {
     this.formatedCsvData = [];
-    for (const i in this.jsonObj) {
-      let target_copy = Object.assign({}, this.jsonObj)[i];
+    const handler = {
+      get(target, property) {
+        return target[property];
+      },
+    };
+    const proxy = new Proxy(this.jsonObj, handler);
+    for (const i in proxy) {
       let stock = {
-        Symbol: target_copy["Symbol"],
-        "Current Price": target_copy["Current Price"],
-        Shares: parseInt(target_copy["Quantity"]),
-        "Purchase Price": target_copy["Purchase Price"],
-        Change: parseFloat(target_copy["Change"]).toFixed(2),
+        Symbol: proxy[i]["Symbol"],
+        "Current Price": proxy[i]["Current Price"],
+        Shares: parseInt(proxy[i]["Quantity"]),
+        "Purchase Price": proxy[i]["Purchase Price"],
+        Change: parseFloat(proxy[i]["Change"]).toFixed(2),
         "Percent Change Today": (
-          (parseFloat(target_copy["Change"]).toFixed(2) /
-            parseFloat(target_copy["Current Price"]).toFixed(2)) *
+          (parseFloat(proxy[i]["Change"]).toFixed(2) /
+            parseFloat(proxy[i]["Current Price"]).toFixed(2)) *
           100
         ).toFixed(2),
         "Daily Gain/Loss": (
-          parseFloat(target_copy["Change"]).toFixed(2) * target_copy["Quantity"]
+          parseFloat(proxy[i]["Change"]).toFixed(2) * proxy[i]["Quantity"]
         ).toFixed(2),
         "Total Gain/Loss": (
-          (parseFloat(target_copy["Current Price"]) -
-            parseFloat(target_copy["Purchase Price"])) *
-          target_copy["Quantity"]
+          (parseFloat(proxy[i]["Current Price"]) -
+            parseFloat(proxy[i]["Purchase Price"])) *
+          proxy[i]["Quantity"]
         ).toFixed(2),
         "Market Value": (
-          parseFloat(target_copy["Current Price"]) * target_copy["Quantity"]
+          parseFloat(proxy[i]["Current Price"]) * proxy[i]["Quantity"]
         ).toFixed(2),
         "Portfolio Percent": (
           ((
-            parseFloat(target_copy["Current Price"]) * target_copy["Quantity"]
+            parseFloat(proxy[i]["Current Price"]) * proxy[i]["Quantity"]
           ).toFixed(2) /
             this.totalValue) *
           100

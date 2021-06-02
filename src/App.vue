@@ -59,7 +59,7 @@
     <div class="w-1/3">
       <div class="h-1/2">Chart</div>
       <div class="h-1/2">
-        <line-chart v-bind:chartdata="lineCharData"></line-chart>
+        <pie-chart v-bind:chartdata="pieChartData"></pie-chart>
       </div>
     </div>
     <div class="w-2/3 m-px mr-4">
@@ -78,7 +78,7 @@ import MarketIndexBox from "./components/MarketIndexBox.vue";
 import CsvChart from "./components/CsvChart.vue";
 import Navbar from "./components/Navbar.vue";
 import csvToJson from "csvtojson";
-import LineChart from "./components/LineChart.vue";
+import PieChartContainer from "./components/PieChartContainer.vue";
 
 export default {
   name: "App",
@@ -91,7 +91,7 @@ export default {
       overallReturnPercentage: Number,
       todaysPerformance: Number,
       todaysPerformancePercentage: Number,
-      lineCharData: null,
+      pieChartData: null,
     };
   },
   components: {
@@ -99,7 +99,7 @@ export default {
     "market-index-box": MarketIndexBox,
     "nav-bar": Navbar,
     "csv-chart": CsvChart,
-    "line-chart": LineChart,
+    "pie-chart": PieChartContainer,
   },
   methods: {
     generateJsonObj() {
@@ -159,8 +159,8 @@ export default {
       this.generateJsonObj();
     },
     getFormattedData(e) {
-      this.lineCharData = e;
-      //console.log("getFormattedData", this.lineCharData);
+      this.pieChartData = e;
+      //console.log("getFormattedData", this.pieChartData);
     },
   },
   created() {
