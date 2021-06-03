@@ -35,14 +35,14 @@
 
         <div
           id="sortboxmenu"
-          class="absolute mt-1 right-1 top-full min-w-max rounded opacity-0 border border-gray-400 transition delay-75 ease-in-out z-10"
+          class="absolute right-1 top-full min-w-max rounded-2xl opacity-0 border-2 border-gray-400 transition delay-75 ease-in-out z-10"
         >
-          <ul class="block text-right text-gray-300">
+          <ul class="block mb-1 text-right text-gray-300">
             <li v-for="(option, index) in options" :key="option.id">
               <a
                 v-if="option.label != options[selectedOption].label"
                 @click="optionClicked(index)"
-                class="block px-2 py-2 hover:bg-gray-700 cursor-pointer"
+                class="block px-2 py-2 cursor-pointer"
                 >{{ option.label }}</a
               >
             </li>
@@ -51,14 +51,14 @@
       </div>
 
       <LineChart
-        v-bind:chartDataset="chartPortfolioData"
-        v-bind:chartLabels="chartLabels"
+        v-bind:chartDataset="lineChartData"
+        v-bind:chartLabels="lineChartLabels"
       />
     </div>
     <div class="mt-8">
       <PieChart
-        v-bind:chartDataset="chartPercentiles"
-        v-bind:chartLabels="chartLabels"
+        v-bind:chartDataset="pieChartPercentiles"
+        v-bind:chartLabels="pieChartLabels"
       />
     </div>
   </div>
@@ -71,8 +71,10 @@ import LineChart from "./LineChart.vue";
 export default {
   data: function () {
     return {
-      chartLabels: [],
-      chartPercentiles: [],
+      pieChartLabels: [],
+      pieChartPercentiles: [],
+      lineChartLabels: [],
+      lineChartData: [],
       loaded: false,
       date: "today",
       options: [
@@ -106,7 +108,7 @@ export default {
     LineChart,
   },
   methods: {
-    generateChartLabels() {
+    generatepieChartLabels() {
       const handler = {
         get(target, property) {
           return target[property];
@@ -114,15 +116,15 @@ export default {
       };
       const proxy = new Proxy(this.chartdata, handler);
 
-      //console.log("generateChartLabels", this.chartdata);
+      //console.log("generatepieChartLabels", this.chartdata);
       var labels = [];
       var percents = [];
       for (const i in proxy) {
         labels.push(proxy[i]["Symbol"]);
         percents.push(parseFloat(proxy[i]["Portfolio Percent"]));
       }
-      this.chartLabels = labels;
-      this.chartPercentiles = percents;
+      this.pieChartLabels = labels;
+      this.pieChartPercentiles = percents;
       //console.log("loaded set to true");
       this.loaded = true;
     },
@@ -141,7 +143,7 @@ export default {
       const proxy = new Proxy(newChartData, handler);
       if (proxy.length !== 0) {
         console.log("Chartdata has data and is updated");
-        this.generateChartLabels();
+        this.generatepieChartLabels();
       }
     },
   },
@@ -151,5 +153,28 @@ export default {
 <style>
 #sortbox:checked ~ #sortboxmenu {
   opacity: 1;
+}
+
+a.block {
+  position: relative;
+}
+
+a.block:before {
+  content: "";
+  position: absolute;
+  width: 80%;
+  margin-left: 10%;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: #FFF;
+  visibility: hidden;
+  transform: scaleX(0);
+  transition: all 0.3s ease-in-out;
+}
+
+a.block:hover:before {
+  visibility: visible;
+  transform: scaleX(1);
 }
 </style>
