@@ -1,4 +1,3 @@
-
 <script>
 import { Line } from "vue3-chart-v2";
 
@@ -12,8 +11,9 @@ export default {
   methods: {
     renderChartData() {
       console.log("render");
+
       var dataCollection = {
-        labels: this.chartLabels,
+        labels: [1, 2, 3, 4, 5, 6, 7],
         datasets: [
           {
             label: "My First Dataset",
@@ -28,7 +28,7 @@ export default {
         responsive: true,
         title: {
           display: true,
-          text: "Stocks % of Portfolio",
+          text: "Portfolio vs S&P 500",
           fontColor: "white",
         },
         legend: {
