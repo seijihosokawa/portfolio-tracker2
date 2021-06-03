@@ -1,7 +1,6 @@
-
 <template>
   <div v-if="!loaded">
-    <p class="text-xs">
+    <p class="text-xl">
       <center>
         <svg
           class="animate-spin h-4 w-4 rounded-full bg-transparent border-2 border-transparent border-opacity-90"
