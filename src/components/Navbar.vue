@@ -72,6 +72,9 @@ export default {
       };
       reader.readAsBinaryString(event.target.files[0]);
     },
+    refresh() {
+      window.location.reload();
+    },
   },
 };
 </script>

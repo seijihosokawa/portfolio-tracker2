@@ -11,16 +11,25 @@
       </center>
     </p>
   </div>
-  <div v-else>
-    <PieChart
-      v-bind:chartDataset="chartPercentiles"
-      v-bind:chartLabels="chartLabels"
-    />
+  <div v-else class="flex flex-col">
+    <div>
+      <LineChart
+        v-bind:chartDataset="chartPortfolioData"
+        v-bind:chartLabels="chartLabels"
+      />
+    </div>
+    <div>
+      <PieChart
+        v-bind:chartDataset="chartPercentiles"
+        v-bind:chartLabels="chartLabels"
+      />
+    </div>
   </div>
 </template>
 
 <script>
 import PieChart from "./PieChart.vue";
+import LineChart from "./LineChart.vue";
 
 export default {
   data: function () {
@@ -33,6 +42,7 @@ export default {
   props: ["chartdata"],
   components: {
     PieChart,
+    LineChart,
   },
   methods: {
     generateChartLabels() {

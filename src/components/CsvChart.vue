@@ -54,12 +54,12 @@ export default {
     numberWithCommas(x) {
       return String(x).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     },
-    sortAlphaSymbol() {
+    sortByPercent() {
       this.formatedCsvData.sort(function (a, b) {
-        if (a.Symbol < b.Symbol) {
+        if (a["Portfolio Percent"] < b["Portfolio Percent"]) {
           return -1;
         }
-        if (a.Symbol > b.Symbol) {
+        if (a["Portfolio Percent"] > b["Portfolio Percent"]) {
           return 1;
         }
         return 0;
@@ -111,7 +111,7 @@ export default {
       };
       this.formatedCsvData.push(stock);
     }
-    this.sortAlphaSymbol();
+    this.sortByPercent();
     this.returnFormattedData();
   },
 };
