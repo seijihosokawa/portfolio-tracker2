@@ -22,54 +22,49 @@
         <i class="ml-1 mdi mdi-chevron-down"></i>
       </button>
       -->
-      <div class="relative inline-block text-right dropdown">
-        <span class="rounded-md"
-          ><button
-            class="inline-flex justify-center w-full px-4 py-2 text-sm font-medium leading-5 text-gray-700 transition duration-150 ease-in-out border border-gray-300 rounded-md hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800"
-            type="button"
-            aria-haspopup="true"
-            aria-expanded="true"
-            aria-controls="headlessui-menu-items-117"
+
+      <div class="relative float-right">
+        <input type="checkbox" id="sortbox" class="hidden absolute" />
+        <label for="sortbox" class="flex items-center space-x-1 cursor-pointer">
+          <span class="text-base">Sort By</span>
+          <svg
+            class="h-4 w-4"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
           >
-            <span>Today</span>
-            <svg
-              class="w-5 h-5 ml-2 -mr-1"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                clip-rule="evenodd"
-              ></path>
-            </svg></button
-        ></span>
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 9l-7 7-7-7"
+            />
+          </svg>
+        </label>
+
         <div
-          class="opacity-0 invisible dropdown-menu transition-all duration-300 transform origin-top-right -translate-y-2 scale-95"
+          id="sortboxmenu"
+          class="absolute mt-1 right-1 top-full min-w-max shadow rounded opacity-0 border border-gray-400 transition delay-75 ease-in-out z-10"
         >
-          <div
-            class="absolute right-0 w-56 mt-2 origin-top-right border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg outline-none"
-            aria-labelledby="headlessui-menu-button-1"
-            id="headlessui-menu-items-117"
-            role="menu"
-          >
-            <div class="py-1">
-              <a
-                href=""
-                tabindex="0"
-                class="text-sm flex justify-between text-right leading-5 w-full"
-                role="menuitem"
-                >5 days</a
+          <ul class="block text-right text-gray-300">
+            <li>
+              <a href="#" class="block px-2 py-2 hover:bg-gray-700">Featured</a>
+            </li>
+            <li>
+              <a href="#" class="block px-2 py-2 hover:bg-gray-700">Newest</a>
+            </li>
+            <li>
+              <a href="#" class="block px-2 py-2 hover:bg-gray-700"
+                >Price: Low to High</a
               >
-              <a
-                href=""
-                tabindex="1"
-                class="text-sm flex justify-between text-right leading-5 w-full"
-                role="menuitem"
-                >30 days</a
+            </li>
+            <li>
+              <a href="#" class="block px-2 py-2 hover:bg-gray-700"
+                >Price: High to Low</a
               >
-            </div>
-          </div>
+            </li>
+          </ul>
         </div>
       </div>
 
@@ -173,9 +168,7 @@ export default {
 </script>
 
 <style>
-.dropdown:focus-within .dropdown-menu {
+#sortbox:checked ~ #sortboxmenu {
   opacity: 1;
-  transform: translate(0) scale(1);
-  visibility: visible;
 }
 </style>
