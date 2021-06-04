@@ -108,7 +108,7 @@ export default {
     LineChart,
   },
   methods: {
-    generatepieChartLabels() {
+    generatePieChartLabels() {
       const handler = {
         get(target, property) {
           return target[property];
@@ -116,7 +116,8 @@ export default {
       };
       const proxy = new Proxy(this.chartdata, handler);
 
-      //console.log("generatepieChartLabels", this.chartdata);
+      //console.log("generatePieChartLabels", this.chartdata);
+      //creating two arrays to pass to Pie Chart component
       var labels = [];
       var percents = [];
       for (const i in proxy) {
@@ -129,12 +130,14 @@ export default {
       this.loaded = true;
     },
     optionClicked(index) {
+      //once a dropdown option is clicked, assign the selected option to chosen index
       console.log(this.options[index]);
       this.selectedOption = index;
     },
   },
   watch: {
     chartdata(newChartData) {
+      //need to watch data to grab data if updated
       const handler = {
         get(target, property) {
           return target[property];
@@ -143,7 +146,7 @@ export default {
       const proxy = new Proxy(newChartData, handler);
       if (proxy.length !== 0) {
         console.log("Chartdata has data and is updated");
-        this.generatepieChartLabels();
+        this.generatePieChartLabels();
       }
     },
   },

@@ -42,6 +42,7 @@
   </table>
 </template>
 <script>
+import { resolveTransitionHooks } from "vue";
 export default {
   props: ["jsonObj", "totalValue"],
   emits: ["getFormattedData"],
@@ -54,12 +55,12 @@ export default {
     numberWithCommas(x) {
       return String(x).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     },
-    sortByPercent() {
+    sortByAlpha() {
       this.formatedCsvData.sort(function (a, b) {
-        if (a["Portfolio Percent"] < b["Portfolio Percent"]) {
+        if (a.Symbol < b.Symbol) {
           return -1;
         }
-        if (a["Portfolio Percent"] > b["Portfolio Percent"]) {
+        if (a.Symbol > b.Symbol) {
           return 1;
         }
         return 0;
@@ -78,6 +79,7 @@ export default {
       },
     };
     const proxy = new Proxy(this.jsonObj, handler);
+    //generate an array of objects with correct formatting
     for (const i in proxy) {
       let stock = {
         Symbol: proxy[i]["Symbol"],
@@ -111,7 +113,7 @@ export default {
       };
       this.formatedCsvData.push(stock);
     }
-    this.sortByPercent();
+    this.sortByAlpha();
     this.returnFormattedData();
   },
 };

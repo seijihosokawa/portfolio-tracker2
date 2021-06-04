@@ -59,6 +59,7 @@ export default {
   emits: ["updateCsvData"],
   methods: {
     passCsvToParent(csvString) {
+      //passing a csv file converted into a string to parent component
       console.log("passCsvToParent", csvString);
       this.$emit("update-csv-data", csvString);
     },
