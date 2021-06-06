@@ -53,6 +53,7 @@
       <LineChart
         v-bind:chartDataset="lineChartData"
         v-bind:chartLabels="lineChartLabels"
+        v-bind:dateRange="options[selectedOption]"
       />
     </div>
     <div class="mt-8">
@@ -80,23 +81,35 @@ export default {
       options: [
         {
           label: "Today",
-          value: "today",
+          value: "1d",
         },
         {
-          label: "Last 7 Days",
-          value: "7days",
+          label: "Last 5 Days",
+          value: "5d",
         },
         {
           label: "Last 30 Days",
-          value: "30days",
+          value: "1mo",
+        },
+        {
+          label: "Last 3 Months",
+          value: "3mo",
         },
         {
           label: "Last 6 Months",
-          value: "6months",
+          value: "6mo",
         },
         {
-          label: "This Year",
-          value: "year",
+          label: "YTD",
+          value: "ytd",
+        },
+        {
+          label: "1 Year",
+          value: "1y",
+        },
+        {
+          label: "5 years",
+          value: "5y",
         },
       ],
       selectedOption: 0,
