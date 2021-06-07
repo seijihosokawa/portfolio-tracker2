@@ -28,7 +28,7 @@ export default {
       console.log("getting api data");
       return new Promise(function (resolve) {
         fetch(
-          `https://apidojo-yahoo-finance-v1.p.rapidapi.com/market/get-charts?symbol=AApl&interval=${interval}&range=${dateRange}&region=US`,
+          `https://apidojo-yahoo-finance-v1.p.rapidapi.com/market/get-charts?symbol=%5EGSPC&interval=${interval}&range=${dateRange}&region=US&comparisons=AAPL%2CTSLA%2CAMD%2CSQ`,
           {
             method: "GET",
             headers: {
@@ -62,7 +62,7 @@ export default {
           labels: this.timeStamps,
           datasets: [
             {
-              label: "My First Dataset",
+              label: "S&P 500",
               data: this.closingPrices,
               fill: false,
               borderColor: "rgb(75, 192, 192)",
