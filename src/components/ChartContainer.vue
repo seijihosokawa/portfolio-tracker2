@@ -13,44 +13,6 @@
   </div>
   <div v-else class="flex flex-col">
     <div class="mt-8">
-      <!--
-      <div class="relative float-right">
-        <input type="checkbox" id="sortbox" class="hidden absolute" />
-        <label for="sortbox" class="flex items-center space-x-1 cursor-pointer">
-          <span class="text-base">{{ options[selectedOption].label }}</span>
-          <svg
-            class="h-4 w-4"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M19 9l-7 7-7-7"
-            />
-          </svg>
-        </label>
-
-        <div
-          id="sortboxmenu"
-          class="absolute right-1 top-full min-w-max rounded-2xl opacity-0 border-2 border-gray-400 transition delay-75 ease-in-out z-10"
-        >
-          <ul class="block mb-1 text-right text-gray-300">
-            <li v-for="(option, index) in options" :key="option.id">
-              <a
-                v-if="option.label != options[selectedOption].label"
-                @click="optionClicked(index)"
-                class="block px-2 py-2 cursor-pointer"
-                >{{ option.label }}</a
-              >
-            </li>
-          </ul>
-        </div>
-      </div>
-      -->
       <div class="relative inline-block text-right dropdown float-right">
         <span class="rounded-md shadow-sm"
           ><button
@@ -60,7 +22,7 @@
             aria-expanded="true"
             aria-controls="headlessui-menu-items-117"
           >
-            <span>Options</span>
+            <span>{{ options[selectedOption].label }}</span>
             <svg
               class="w-5 h-5 ml-2 -mr-1"
               viewBox="0 0 20 20"
@@ -77,7 +39,7 @@
           class="opacity-0 invisible dropdown-menu transition-all duration-300 transform origin-top-right -translate-y-2 scale-95"
         >
           <div
-            class="absolute right-0 w-56 mt-2 origin-top-right border border-gray-200 rounded-md"
+            class="absolute right-0 w-56 mt-2 origin-top-right border border-gray-200 bg-black rounded-md"
             aria-labelledby="headlessui-menu-button-1"
             id="headlessui-menu-items-117"
             role="menu"
@@ -101,7 +63,6 @@
       <LineChart
         v-bind:chartDataset="lineChartData"
         v-bind:chartLabels="lineChartLabels"
-        v-bind:dateRange="options[selectedOption]"
       />
     </div>
     <div class="mt-8">
@@ -122,10 +83,10 @@ export default {
     return {
       pieChartLabels: [],
       pieChartPercentiles: [],
-      lineChartLabels: [],
       lineChartData: [],
+      lineChartLabels: [],
       loaded: false,
-      date: "today",
+      dateVal: "1d",
       options: [
         {
           label: "Today",
@@ -169,7 +130,7 @@ export default {
     LineChart,
   },
   methods: {
-    generatePieChartLabels() {
+    generatePieChart() {
       const handler = {
         get(target, property) {
           return target[property];
@@ -177,7 +138,7 @@ export default {
       };
       const proxy = new Proxy(this.chartdata, handler);
 
-      //console.log("generatePieChartLabels", this.chartdata);
+      //console.log("generatePieChart", this.chartdata);
       //creating two arrays to pass to Pie Chart component
       var labels = [];
       var percents = [];
@@ -190,10 +151,58 @@ export default {
       //console.log("loaded set to true");
       this.loaded = true;
     },
+    async getApiDataHandler() {
+      console.log(this.dateRange);
+      var data = await this.getApiData();
+      //console.log(data);
+      return data;
+    },
+    getApiData() {
+      var interval = "15m";
+      if (this.dateRange === "5d") interval = "1d";
+      if (this.dateRange === "1m") interval = "1w";
+      if (this.dateRange === "3m" || this.dateRange === "6m") interval = "1m";
+      var dateRange = this.dateRange;
+      //other token: c4eac4392cmsh76076d1e061f713p1b7aa9jsn6f47c253ffd9
+      return new Promise(function (resolve) {
+        fetch(
+          `https://apidojo-yahoo-finance-v1.p.rapidapi.com/market/get-charts?symbol=%5EGSPC&interval=${interval}&range=${dateRange}&region=US&comparisons=AAPL%2CTSLA`,
+          {
+            method: "GET",
+            headers: {
+              "x-rapidapi-key":
+                "b44712c8bfmshfd507b16c8e731bp1c8a77jsned08f4602d3d",
+              "x-rapidapi-host": "apidojo-yahoo-finance-v1.p.rapidapi.com",
+            },
+          }
+        )
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data);
+            resolve(data.chart.result[0]);
+          })
+          .catch((err) => {
+            console.error(err);
+          });
+      });
+    },
+    generateLineChart() {
+      this.getApiDataHandler().then((data) => {
+        this.lineChartLabels = data.timestamp;
+        this.lineChartData = data.indicators.quote[0].close;
+
+        this.lineChartLabels.forEach(function (val, index, arr) {
+          arr[index] = new Date(val * 1000).toLocaleString().split(",")[1];
+        });
+        console.log("line chart labels", this.lineChartLabels);
+        console.log("closing price", this.lineChartData);
+      });
+    },
     optionClicked(index) {
       //once a dropdown option is clicked, assign the selected option to chosen index
-      console.log(this.options[index]);
+      //console.log(this.options[index]);
       this.selectedOption = index;
+      this.dateVal = this.options[this.selectedOption].value;
     },
   },
   watch: {
@@ -207,7 +216,8 @@ export default {
       const proxy = new Proxy(newChartData, handler);
       if (proxy.length !== 0) {
         console.log("Chartdata has data and is updated");
-        this.generatePieChartLabels();
+        this.generatePieChart();
+        this.generateLineChart();
       }
     },
   },
