@@ -6,18 +6,21 @@ export default {
   extends: Line,
   props: ["chartDataset", "chartLabels"],
   data() {
-    return {};
+    return {
+      lineChartData: [],
+      lineChartLabels: [],
+    };
   },
   methods: {
     async renderChartData() {
       await this.sleep(1000);
 
       var dataCollection = {
-        labels: this.chartLabels,
+        labels: this.lineChartLabels,
         datasets: [
           {
             label: "S&P 500",
-            data: this.chartDataset,
+            data: this.lineChartData,
             fill: true,
             borderColor: "#D6ED17FF",
             backgroundColor: "#101820FF",
@@ -47,6 +50,8 @@ export default {
     },
   },
   mounted() {
+    this.lineChartData = this.chartDataset;
+    this.lineChartLabels = this.chartLabels;
     this.renderChartData();
   },
 };

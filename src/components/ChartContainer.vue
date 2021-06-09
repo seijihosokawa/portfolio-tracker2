@@ -22,9 +22,7 @@
             aria-expanded="true"
             aria-controls="headlessui-menu-items-117"
           >
-            <span @change="generateLineChart">{{
-              options[selectedOption].label
-            }}</span>
+            <span>{{ options[selectedOption].label }}</span>
             <svg
               class="w-5 h-5 ml-2 -mr-1"
               viewBox="0 0 20 20"
@@ -61,7 +59,6 @@
           </div>
         </div>
       </div>
-
       <LineChart
         v-bind:chartDataset="lineChartData"
         v-bind:chartLabels="lineChartLabels"
@@ -79,7 +76,7 @@
 <script>
 import PieChart from "./PieChart.vue";
 import LineChart from "./LineChart.vue";
-
+//need to move all chart data to here
 export default {
   data: function () {
     return {
@@ -154,20 +151,19 @@ export default {
       this.loaded = true;
     },
     async getApiDataHandler() {
-      console.log(this.dateRange);
       var data = await this.getApiData();
       //console.log(data);
       return data;
     },
     getApiData() {
       var interval = "15m";
-      if (this.dateRange === "5d") interval = "1d";
-      if (this.dateRange === "1m") interval = "1w";
-      if (this.dateRange === "3m" || this.dateRange === "6m") interval = "1m";
-      if (this.dateRange === "ytd" || this.dateRange === "1y") interval = "1m";
-      if (this.dateRange === "5y") interval = "1y";
+      if (this.dateVal === "5d") interval = "1d";
+      if (this.dateVal === "1mo") interval = "1w";
+      if (this.dateVal === "3mo" || this.dateVal === "6mo") interval = "1mo";
+      if (this.dateVal === "ytd" || this.dateVal === "1y") interval = "1mo";
+      if (this.dateVal === "5y") interval = "1y";
 
-      var dateRange = this.dateRange;
+      var dateRange = this.dateVal;
       //other token: c4eac4392cmsh76076d1e061f713p1b7aa9jsn6f47c253ffd9
       return new Promise(function (resolve) {
         fetch(
@@ -183,6 +179,7 @@ export default {
         )
           .then((response) => response.json())
           .then((data) => {
+            //console.log(data);
             resolve(data.chart.result[0]);
           })
           .catch((err) => {
@@ -195,18 +192,24 @@ export default {
         this.lineChartLabels = data.timestamp;
         this.lineChartData = data.indicators.quote[0].close;
 
+        console.log("line chart updated", data.meta.range);
+        console.log("line chart labels", this.lineChartLabels);
+        console.log("closing price", this.lineChartData);
+
         this.lineChartLabels.forEach(function (val, index, arr) {
-          arr[index] = new Date(val * 1000).toLocaleString().split(",")[1];
+          //console.log(Date(val * 1000).toLocaleString())
+          let i = 0;
+          if (data.meta.range === "1d") i = 1;
+          arr[index] = new Date(val * 1000).toLocaleString().split(",")[i];
         });
-        //console.log("line chart labels", this.lineChartLabels);
-        //console.log("closing price", this.lineChartData);
       });
     },
     optionClicked(index) {
       //once a dropdown option is clicked, assign the selected option to chosen index
       //console.log(this.options[index]);
       this.selectedOption = index;
-      this.dateVal = this.options[this.selectedOption].value;
+      this.dateVal = this.options[index].value;
+      this.generateLineChart();
     },
   },
   watch: {
