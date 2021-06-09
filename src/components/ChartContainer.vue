@@ -59,10 +59,7 @@
           </div>
         </div>
       </div>
-      <LineChart
-        v-bind:chartDataset="lineChartData"
-        v-bind:chartLabels="lineChartLabels"
-      />
+      <LineChart v-bind:chartDataset="lineChartData" />
     </div>
     <div class="mt-8">
       <PieChart
@@ -82,8 +79,7 @@ export default {
     return {
       pieChartLabels: [],
       pieChartPercentiles: [],
-      lineChartData: [],
-      lineChartLabels: [],
+      lineChartData: {},
       loaded: false,
       dateVal: "1d",
       options: [
@@ -158,7 +154,7 @@ export default {
     getApiData() {
       var interval = "15m";
       if (this.dateVal === "5d") interval = "1d";
-      if (this.dateVal === "1mo") interval = "1w";
+      if (this.dateVal === "1mo") interval = "1wk";
       if (this.dateVal === "3mo" || this.dateVal === "6mo") interval = "1mo";
       if (this.dateVal === "ytd" || this.dateVal === "1y") interval = "1mo";
       if (this.dateVal === "5y") interval = "1y";
@@ -188,29 +184,47 @@ export default {
       });
     },
     generateLineChart() {
+      console.log("generating line chart");
       this.getApiDataHandler().then((data) => {
-        this.lineChartLabels = data.timestamp;
-        this.lineChartData = data.indicators.quote[0].close;
+        var lineChartLabel = data.timestamp;
+        var lineChartDataset = data.indicators.quote[0].close;
 
-        console.log("line chart updated", data.meta.range);
-        console.log("line chart labels", this.lineChartLabels);
-        console.log("closing price", this.lineChartData);
+        //console.log("line chart updated", data.meta.range);
+        //console.log("line chart labels", this.lineChartLabels);
+        //console.log("closing price", this.lineChartData);
 
-        this.lineChartLabels.forEach(function (val, index, arr) {
-          //console.log(Date(val * 1000).toLocaleString())
+        lineChartLabel.forEach(function (val, index, arr) {
           let i = 0;
           if (data.meta.range === "1d") i = 1;
           arr[index] = new Date(val * 1000).toLocaleString().split(",")[i];
         });
+
+        this.lineChartData = {
+          labels: lineChartLabel,
+          datasets: [
+            {
+              label: "S&P 500",
+              data: lineChartDataset,
+              fill: true,
+              borderColor: "#D6ED17FF",
+              backgroundColor: "#101820FF",
+              tension: 0.1,
+            },
+          ],
+        };
+        console.log("line chart data", this.lineChartData);
       });
     },
     optionClicked(index) {
       //once a dropdown option is clicked, assign the selected option to chosen index
-      //console.log(this.options[index]);
+      console.log(this.options[index]);
       this.selectedOption = index;
       this.dateVal = this.options[index].value;
       this.generateLineChart();
     },
+  },
+  beforeMount() {
+    this.generateLineChart();
   },
   watch: {
     chartdata(newChartData) {
@@ -224,7 +238,6 @@ export default {
       if (proxy.length !== 0) {
         console.log("Chartdata has data and is updated");
         this.generatePieChart();
-        this.generateLineChart();
       }
     },
   },
