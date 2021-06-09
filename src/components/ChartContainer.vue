@@ -22,7 +22,9 @@
             aria-expanded="true"
             aria-controls="headlessui-menu-items-117"
           >
-            <span>{{ options[selectedOption].label }}</span>
+            <span @change="generateLineChart">{{
+              options[selectedOption].label
+            }}</span>
             <svg
               class="w-5 h-5 ml-2 -mr-1"
               viewBox="0 0 20 20"
@@ -162,11 +164,14 @@ export default {
       if (this.dateRange === "5d") interval = "1d";
       if (this.dateRange === "1m") interval = "1w";
       if (this.dateRange === "3m" || this.dateRange === "6m") interval = "1m";
+      if (this.dateRange === "ytd" || this.dateRange === "1y") interval = "1m";
+      if (this.dateRange === "5y") interval = "1y";
+
       var dateRange = this.dateRange;
       //other token: c4eac4392cmsh76076d1e061f713p1b7aa9jsn6f47c253ffd9
       return new Promise(function (resolve) {
         fetch(
-          `https://apidojo-yahoo-finance-v1.p.rapidapi.com/market/get-charts?symbol=%5EGSPC&interval=${interval}&range=${dateRange}&region=US&comparisons=AAPL%2CTSLA`,
+          `https://apidojo-yahoo-finance-v1.p.rapidapi.com/market/get-charts?symbol=%5EGSPC&interval=${interval}&range=${dateRange}&region=US`,
           {
             method: "GET",
             headers: {
@@ -178,7 +183,6 @@ export default {
         )
           .then((response) => response.json())
           .then((data) => {
-            console.log(data);
             resolve(data.chart.result[0]);
           })
           .catch((err) => {
@@ -194,8 +198,8 @@ export default {
         this.lineChartLabels.forEach(function (val, index, arr) {
           arr[index] = new Date(val * 1000).toLocaleString().split(",")[1];
         });
-        console.log("line chart labels", this.lineChartLabels);
-        console.log("closing price", this.lineChartData);
+        //console.log("line chart labels", this.lineChartLabels);
+        //console.log("closing price", this.lineChartData);
       });
     },
     optionClicked(index) {

@@ -10,7 +10,7 @@ export default {
   },
   methods: {
     async renderChartData() {
-      await this.sleep(500);
+      await this.sleep(1000);
 
       var dataCollection = {
         labels: this.chartLabels,
@@ -18,8 +18,9 @@ export default {
           {
             label: "S&P 500",
             data: this.chartDataset,
-            fill: false,
-            borderColor: "rgb(75, 192, 192)",
+            fill: true,
+            borderColor: "#D6ED17FF",
+            backgroundColor: "#101820FF",
             tension: 0.1,
           },
         ],
@@ -28,7 +29,7 @@ export default {
         responsive: true,
         title: {
           display: true,
-          text: "Portfolio vs S&P 500",
+          text: "S&P 500",
           fontColor: "white",
         },
         legend: {
