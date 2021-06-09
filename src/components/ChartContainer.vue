@@ -178,7 +178,7 @@ export default {
       return lineChartLabel;
     },
     generateLineChart() {
-      console.log("generate chart");
+      //console.log("generate chart");
       var dateRange = this.dateVal;
       var interval = this.dateInterval;
 
@@ -196,7 +196,7 @@ export default {
       )
         .then((response) => response.json())
         .then((data) => {
-          console.log(data.chart.result[0]);
+          //console.log(data.chart.result[0]);
           var chartData = data.chart.result[0].indicators.quote[0].close;
           var chartLabels = data.chart.result[0].timestamp;
 
@@ -251,7 +251,7 @@ export default {
       };
       const proxy = new Proxy(newChartData, handler);
       if (proxy.length !== 0) {
-        console.log("Chartdata has data and is updated");
+        //console.log("Chartdata has data and is updated");
         this.generatePieChart();
       }
     },

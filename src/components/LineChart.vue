@@ -24,7 +24,7 @@ export default {
       this.chartData = newChartData;
     },
     chartLabels(newChartLabels) {
-      console.log(newChartLabels);
+      //console.log(newChartLabels);
       this.chartData.labels = newChartLabels;
     },
   },

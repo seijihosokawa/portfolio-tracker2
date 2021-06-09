@@ -42,7 +42,7 @@
   </table>
 </template>
 <script>
-import { resolveTransitionHooks } from "vue";
+
 export default {
   props: ["jsonObj", "totalValue"],
   emits: ["getFormattedData"],

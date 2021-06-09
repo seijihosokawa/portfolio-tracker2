@@ -11,7 +11,7 @@ export default {
   },
   methods: {
     renderChartData() {
-      console.log("render");
+      //console.log("render");
       var dataCollection = {
         labels: this.chartLabels,
         datasets: [
