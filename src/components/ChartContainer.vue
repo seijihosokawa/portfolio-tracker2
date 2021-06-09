@@ -22,7 +22,7 @@
             aria-expanded="true"
             aria-controls="headlessui-menu-items-117"
           >
-            <span>{{ options[selectedOption].label }}</span>
+            <span>{{ options[previousOption].label }}</span>
             <svg
               class="w-5 h-5 ml-2 -mr-1"
               viewBox="0 0 20 20"
@@ -50,7 +50,6 @@
               :key="option.id"
             >
               <a
-                v-if="option.label != options[selectedOption].label"
                 @click="optionClicked(index)"
                 class="block px-2 py-2 cursor-pointer"
                 >{{ option.label }}</a
@@ -59,7 +58,10 @@
           </div>
         </div>
       </div>
-      <LineChart v-bind:chartDataset="lineChartData" />
+      <LineChart
+        v-bind:chartDataset="lineChartData"
+        v-bind:chartLabels="lineLabels"
+      />
     </div>
     <div class="mt-8">
       <PieChart
@@ -80,43 +82,54 @@ export default {
       pieChartLabels: [],
       pieChartPercentiles: [],
       lineChartData: {},
+      lineLabels: [],
       loaded: false,
       dateVal: "1d",
+      dateInterval: "15m",
       options: [
         {
           label: "Today",
           value: "1d",
+          interval: "15m",
         },
         {
           label: "Last 5 Days",
           value: "5d",
+          interval: "1d",
         },
         {
           label: "Last 30 Days",
           value: "1mo",
+          interval: "1wk",
         },
         {
           label: "Last 3 Months",
           value: "3mo",
+          interval: "1mo",
         },
         {
           label: "Last 6 Months",
           value: "6mo",
+          interval: "1mo",
         },
         {
           label: "YTD",
           value: "ytd",
+          interval: "1mo",
         },
         {
           label: "1 Year",
           value: "1y",
+          interval: "1mo",
         },
         {
           label: "5 years",
           value: "5y",
+          interval: "1y",
         },
       ],
       selectedOption: 0,
+      previousOption: 0,
     };
   },
   props: ["chartdata"],
@@ -144,86 +157,88 @@ export default {
       this.pieChartLabels = labels;
       this.pieChartPercentiles = percents;
       //console.log("loaded set to true");
-      this.loaded = true;
     },
-    async getApiDataHandler() {
-      var data = await this.getApiData();
+    async getApiData() {
+      var data = await this.makeApiCall();
       //console.log(data);
-      return data;
+      return data.indicators.quote[0].close;
     },
-    getApiData() {
-      var interval = "15m";
-      if (this.dateVal === "5d") interval = "1d";
-      if (this.dateVal === "1mo") interval = "1wk";
-      if (this.dateVal === "3mo" || this.dateVal === "6mo") interval = "1mo";
-      if (this.dateVal === "ytd" || this.dateVal === "1y") interval = "1mo";
-      if (this.dateVal === "5y") interval = "1y";
-
-      var dateRange = this.dateVal;
-      //other token: c4eac4392cmsh76076d1e061f713p1b7aa9jsn6f47c253ffd9
-      return new Promise(function (resolve) {
-        fetch(
-          `https://apidojo-yahoo-finance-v1.p.rapidapi.com/market/get-charts?symbol=%5EGSPC&interval=${interval}&range=${dateRange}&region=US`,
-          {
-            method: "GET",
-            headers: {
-              "x-rapidapi-key":
-                "b44712c8bfmshfd507b16c8e731bp1c8a77jsned08f4602d3d",
-              "x-rapidapi-host": "apidojo-yahoo-finance-v1.p.rapidapi.com",
-            },
-          }
-        )
-          .then((response) => response.json())
-          .then((data) => {
-            //console.log(data);
-            resolve(data.chart.result[0]);
-          })
-          .catch((err) => {
-            console.error(err);
-          });
+    async getApiLabels() {
+      var data = await this.makeApiCall();
+      //console.log(data);
+      var lineChartLabel = data.timestamp;
+      lineChartLabel.forEach(function (val, index, arr) {
+        let i = 0;
+        if (data.meta.range === "1d") {
+          i = 1;
+        }
+        arr[index] = new Date(val * 1000).toLocaleString().split(",")[i];
       });
+
+      return lineChartLabel;
     },
     generateLineChart() {
-      console.log("generating line chart");
-      this.getApiDataHandler().then((data) => {
-        var lineChartLabel = data.timestamp;
-        var lineChartDataset = data.indicators.quote[0].close;
+      console.log("generate chart");
+      var dateRange = this.dateVal;
+      var interval = this.dateInterval;
 
-        //console.log("line chart updated", data.meta.range);
-        //console.log("line chart labels", this.lineChartLabels);
-        //console.log("closing price", this.lineChartData);
+      //other token: c4eac4392cmsh76076d1e061f713p1b7aa9jsn6f47c253ffd9
+      fetch(
+        `https://apidojo-yahoo-finance-v1.p.rapidapi.com/market/get-charts?symbol=%5EGSPC&interval=${interval}&range=${dateRange}&region=US`,
+        {
+          method: "GET",
+          headers: {
+            "x-rapidapi-key":
+              "b44712c8bfmshfd507b16c8e731bp1c8a77jsned08f4602d3d",
+            "x-rapidapi-host": "apidojo-yahoo-finance-v1.p.rapidapi.com",
+          },
+        }
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data.chart.result[0]);
+          var chartData = data.chart.result[0].indicators.quote[0].close;
+          var chartLabels = data.chart.result[0].timestamp;
 
-        lineChartLabel.forEach(function (val, index, arr) {
-          let i = 0;
-          if (data.meta.range === "1d") i = 1;
-          arr[index] = new Date(val * 1000).toLocaleString().split(",")[i];
+          chartLabels.forEach(function (val, index, arr) {
+            let i = 0;
+            if (data.chart.result[0].meta.range === "1d") {
+              i = 1;
+            }
+            arr[index] = new Date(val * 1000).toLocaleString().split(",")[i];
+          });
+
+          this.lineChartData = {
+            labels: chartLabels,
+            datasets: [
+              {
+                label: "S&P 500",
+                data: chartData,
+                fill: true,
+                borderColor: "#D6ED17FF",
+                backgroundColor: "#101820FF",
+                tension: 0.1,
+              },
+            ],
+          };
+          this.loaded = true;
+        })
+        .catch((err) => {
+          console.error(err);
         });
-
-        this.lineChartData = {
-          labels: lineChartLabel,
-          datasets: [
-            {
-              label: "S&P 500",
-              data: lineChartDataset,
-              fill: true,
-              borderColor: "#D6ED17FF",
-              backgroundColor: "#101820FF",
-              tension: 0.1,
-            },
-          ],
-        };
-        console.log("line chart data", this.lineChartData);
-      });
     },
+
     optionClicked(index) {
       //once a dropdown option is clicked, assign the selected option to chosen index
-      console.log(this.options[index]);
+      //console.log(this.options[index]);
+      this.previousOption = this.selectedOption;
       this.selectedOption = index;
       this.dateVal = this.options[index].value;
+      this.dateInterval = this.options[index].interval;
       this.generateLineChart();
     },
   },
-  beforeMount() {
+  mounted() {
     this.generateLineChart();
   },
   watch: {

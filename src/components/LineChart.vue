@@ -4,7 +4,7 @@ import { Line } from "vue3-chart-v2";
 export default {
   name: "LineChart",
   extends: Line,
-  props: ["chartDataset"],
+  props: ["chartDataset", "chartLabels"],
   data() {
     return {
       chartData: {},
@@ -22,6 +22,10 @@ export default {
   watch: {
     chartDataset(newChartData) {
       this.chartData = newChartData;
+    },
+    chartLabels(newChartLabels) {
+      console.log(newChartLabels);
+      this.chartData.labels = newChartLabels;
     },
   },
   mounted() {
