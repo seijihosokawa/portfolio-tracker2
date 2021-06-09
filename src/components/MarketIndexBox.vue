@@ -45,10 +45,11 @@ export default {
   methods: {
     async getIndexPrice(stockSymbol) {
       try {
-        //var data = await getMarketPrice(stockSymbol);
-        this.price = 300; //data["price"]["regularMarketPrice"]["fmt"];
-        this.dayChange = 200; //data["price"]["regularMarketChange"]["fmt"];
-        this.dayPercentChange = 3.0; //data["price"]["regularMarketChangePercent"]["fmt"];
+        var data = await getMarketPrice(stockSymbol);
+        this.price = data["price"]["regularMarketPrice"]["fmt"];
+        this.dayChange = data["price"]["regularMarketChange"]["fmt"];
+        this.dayPercentChange =
+          data["price"]["regularMarketChangePercent"]["fmt"];
         this.positive = this.dayChange >= 0 ? true : false;
         this.loaded = true;
       } catch (error) {
