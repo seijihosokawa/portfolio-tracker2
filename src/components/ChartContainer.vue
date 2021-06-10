@@ -1,17 +1,5 @@
 <template>
-  <div v-if="!loaded">
-    <p class="text-xl">
-      <center>
-        <svg
-          class="animate-spin h-4 w-4 rounded-full bg-transparent border-2 border-transparent border-opacity-90"
-          style="border-right-color: white; border-top-color: white"
-          viewBox="0 0 24 24"
-        ></svg>
-        Upload CSV
-      </center>
-    </p>
-  </div>
-  <div v-else class="flex flex-col">
+  <div v-if="loaded" class="flex flex-col">
     <div class="mt-8">
       <div class="relative inline-block text-right dropdown float-right">
         <span class="rounded-md shadow-sm"
@@ -70,12 +58,24 @@
       />
     </div>
   </div>
+  <div v-else>
+    <p class="text-xl">
+      <center>
+        <svg
+          class="animate-spin h-4 w-4 rounded-full bg-transparent border-2 border-transparent border-opacity-90"
+          style="border-right-color: white; border-top-color: white"
+          viewBox="0 0 24 24"
+        ></svg>
+        Upload CSV
+      </center>
+    </p>
+  </div>
 </template>
 
 <script>
 import PieChart from "./PieChart.vue";
 import LineChart from "./LineChart.vue";
-//need to move all chart data to here
+
 export default {
   data: function () {
     return {
@@ -183,14 +183,13 @@ export default {
       var dateRange = this.dateVal;
       var interval = this.dateInterval;
 
-      //other token: c4eac4392cmsh76076d1e061f713p1b7aa9jsn6f47c253ffd9
       fetch(
         `https://apidojo-yahoo-finance-v1.p.rapidapi.com/market/get-charts?symbol=%5EGSPC&interval=${interval}&range=${dateRange}&region=US`,
         {
           method: "GET",
           headers: {
             "x-rapidapi-key":
-              "b44712c8bfmshfd507b16c8e731bp1c8a77jsned08f4602d3d",
+              "c4eac4392cmsh76076d1e061f713p1b7aa9jsn6f47c253ffd9",
             "x-rapidapi-host": "apidojo-yahoo-finance-v1.p.rapidapi.com",
           },
         }

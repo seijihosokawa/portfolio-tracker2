@@ -1,5 +1,5 @@
 <template>
-  <nav-bar @update-csv-data="updateCsvData"></nav-bar>
+  <nav-bar @update-csv-data="this.updateCsvData"></nav-bar>
   <!-- First row of info -->
   <div class="flex auto">
     <!--  Left side row of info boxes -->
@@ -88,8 +88,7 @@ export default {
       overallReturnPercentage: Number,
       todaysPerformance: Number,
       todaysPerformancePercentage: Number,
-      pieChartData: null,
-      lineChartData: null,
+      pieChartData: [],
     };
   },
   components: {
