@@ -73,7 +73,7 @@ function getMarketPrice(apiStockSymbol) {
     fetch(url, {
       method: "GET",
       headers: {
-        "x-rapidapi-key": "c4eac4392cmsh76076d1e061f713p1b7aa9jsn6f47c253ffd9",
+        "x-rapidapi-key": "a4836e3c18mshac869fa0b37654bp1e85b1jsna3679e02426f",
         "x-rapidapi-host": "apidojo-yahoo-finance-v1.p.rapidapi.com",
       },
     })

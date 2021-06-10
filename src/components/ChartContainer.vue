@@ -1,6 +1,6 @@
 <template>
-  <div v-if="loaded" class="flex flex-col">
-    <div class="mt-8">
+  <div class="flex flex-col">
+    <div v-if="lineLoaded" class="mt-8">
       <div class="relative inline-block text-right dropdown float-right">
         <span class="rounded-md shadow-sm"
           ><button
@@ -51,24 +51,36 @@
         v-bind:chartLabels="lineLabels"
       />
     </div>
-    <div class="mt-8">
+    <div v-else>
+      <p class="text-xl">
+        <center>
+          <svg
+            class="animate-spin h-4 w-4 rounded-full bg-transparent border-2 border-transparent border-opacity-90"
+            style="border-right-color: white; border-top-color: white"
+            viewBox="0 0 24 24"
+          ></svg>
+          Upload CSV
+        </center>
+      </p>
+    </div>
+    <div v-if="pieLoaded" class="mt-8">
       <PieChart
         v-bind:chartDataset="pieChartPercentiles"
         v-bind:chartLabels="pieChartLabels"
       />
     </div>
-  </div>
-  <div v-else>
-    <p class="text-xl">
-      <center>
-        <svg
-          class="animate-spin h-4 w-4 rounded-full bg-transparent border-2 border-transparent border-opacity-90"
-          style="border-right-color: white; border-top-color: white"
-          viewBox="0 0 24 24"
-        ></svg>
-        Upload CSV
-      </center>
-    </p>
+    <div v-else>
+      <p class="text-xl">
+        <center>
+          <svg
+            class="animate-spin h-4 w-4 rounded-full bg-transparent border-2 border-transparent border-opacity-90"
+            style="border-right-color: white; border-top-color: white"
+            viewBox="0 0 24 24"
+          ></svg>
+          Upload CSV
+        </center>
+      </p>
+    </div>
   </div>
 </template>
 
@@ -83,7 +95,8 @@ export default {
       pieChartPercentiles: [],
       lineChartData: {},
       lineLabels: [],
-      loaded: false,
+      pieLoaded: false,
+      lineLoaded: false,
       dateVal: "1d",
       dateInterval: "15m",
       options: [
@@ -157,7 +170,7 @@ export default {
       this.pieChartLabels = labels;
       this.pieChartPercentiles = percents;
       //console.log("loaded set to true");
-      this.loaded = true;
+      this.pieLoaded = true;
     },
     async getApiData() {
       var data = await this.makeApiCall();
@@ -189,7 +202,7 @@ export default {
           method: "GET",
           headers: {
             "x-rapidapi-key":
-              "c4eac4392cmsh76076d1e061f713p1b7aa9jsn6f47c253ffd9",
+              "a4836e3c18mshac869fa0b37654bp1e85b1jsna3679e02426f",
             "x-rapidapi-host": "apidojo-yahoo-finance-v1.p.rapidapi.com",
           },
         }
@@ -221,6 +234,8 @@ export default {
               },
             ],
           };
+                this.lineLoaded = true;
+
         })
         .catch((err) => {
           console.error(err);
@@ -237,7 +252,7 @@ export default {
       this.generateLineChart();
     },
   },
-  mounted() {
+  created() {
     this.generateLineChart();
   },
   watch: {
