@@ -157,6 +157,7 @@ export default {
       this.pieChartLabels = labels;
       this.pieChartPercentiles = percents;
       //console.log("loaded set to true");
+      this.loaded = true;
     },
     async getApiData() {
       var data = await this.makeApiCall();
@@ -221,7 +222,6 @@ export default {
               },
             ],
           };
-          this.loaded = true;
         })
         .catch((err) => {
           console.error(err);
